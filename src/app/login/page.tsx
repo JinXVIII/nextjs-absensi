@@ -2,9 +2,11 @@
 
 import ErrorAlert from '@/components/Alert/ErrorAlert'
 import TextInput from '@/components/Input/TextInput'
+import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/firebaseClient'
 import { setCookie } from 'cookies-next'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import { Loader2Icon } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -44,9 +46,9 @@ function Login() {
         <div className='relative'>
             <ErrorAlert message={error} visible={showAlert} />
 
-            <div className='flex items-center w-screen h-screen justify-between font-poppins'>
+            <div className='flex items-center justify-between w-screen h-screen font-poppins'>
                 {/* Left Column */}
-                <div className='w-2/5 h-full p-16 flex flex-col gap-16'>
+                <div className='flex flex-col w-2/5 h-full gap-16 p-16'>
                     <div className='flex flex-row items-center gap-4'>
                         <Image
                             src="/assets/icons/favicon.png"
@@ -54,7 +56,7 @@ function Login() {
                             height={120}
                             alt="logo" />
                         <div className="flex flex-col">
-                            <p className='text-2xl text-absensi-primary font-bold'>
+                            <p className='text-2xl font-bold text-absensi-primary'>
                                 Sekolahku
                             </p>
                             <p className='text-primary'>
@@ -89,15 +91,20 @@ function Login() {
                         </div>
 
                         <div>
-                            <button
+                            <Button
+                                size="lg"
                                 type="submit"
-                                className="bg-absensi-primary text-white py-3 rounded-lg w-full"
+                                className="w-full py-3 text-white rounded-lg bg-absensi-primary"
                                 disabled={loading}
                             >
+                                {loading && (
+                                    <Loader2Icon className="mr-2 animate-spin" />
+                                )}
                                 {loading ? 'Loading...' : 'Masuk'}
-                            </button>
+                            </Button>
+
                             <div>
-                                <p className='text-primary text-center mt-4'>
+                                <p className='mt-4 text-center text-primary'>
                                     Belum punya akun? <a href="/register" className='text-absensi-primary'>Daftar disini</a>
                                 </p>
                             </div>
