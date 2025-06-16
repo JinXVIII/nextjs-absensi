@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 :root {
-
   --color-absensi-primary: #21007d;
   --color-absensi-secondary: #6b3af8;
   --color-absensi-tertiary: #121212;
@@ -14,8 +13,6 @@
   --color-disable: #a0a0a0;
   --font-poppins: "Poppins", sans-serif;
 }
-
-
 
 @layer base {
   :root {
@@ -86,6 +83,7 @@
 
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
   .dark {
 
     --background: 0 0% 3.9%;
@@ -160,6 +158,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
