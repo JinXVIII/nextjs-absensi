@@ -2,9 +2,9 @@
 
 import ErrorAlert from '@/components/Alert/ErrorAlert';
 import TextInput from '@/components/Input/TextInput'
-import { auth, db } from '@/lib/firebaseClient';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+// import { auth, db } from '@/lib/firebaseClient';
+// import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+// import { doc, setDoc } from 'firebase/firestore';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
@@ -26,18 +26,19 @@ function Register() {
         console.log('Data dikirim:', { name, email, password });
 
         try {
-            const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
-            const uid = userCredentials.user.uid;
-
-            await updateProfile(userCredentials.user, {
-                displayName: name,
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, password }),
             });
 
-            await setDoc(doc(db, "users", uid), {
-                name,
-                email,
-                role: "teacher"
-            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.message || 'Registrasi gagal');
+            }
 
             setName('');
             setEmail('');
@@ -60,9 +61,9 @@ function Register() {
         <div className='relative'>
             <ErrorAlert message={error} visible={showAlert} />
 
-            <div className='flex items-center w-screen h-screen justify-between font-poppins'>
+            <div className='flex items-center justify-between w-screen h-screen font-poppins'>
                 {/* Left Column */}
-                <div className='w-2/5 h-full p-16 flex flex-col gap-16'>
+                <div className='flex flex-col w-2/5 h-full gap-16 p-16'>
                     <div className='flex flex-row items-center gap-4'>
                         <Image
                             src="/assets/icons/favicon.png"
@@ -70,7 +71,7 @@ function Register() {
                             height={120}
                             alt="logo" />
                         <div className="flex flex-col">
-                            <p className='text-2xl text-absensi-primary font-bold'>
+                            <p className='text-2xl font-bold text-absensi-primary'>
                                 Sekolahku
                             </p>
                             <p className='text-primary'>
@@ -116,13 +117,13 @@ function Register() {
                         <div>
                             <button
                                 type="submit"
-                                className="bg-absensi-primary text-white py-3 rounded-lg w-full"
+                                className="w-full py-3 text-white rounded-lg bg-absensi-primary"
                                 disabled={loading}
                             >
                                 {loading ? 'Loading...' : 'Daftar'}
                             </button>
                             <div>
-                                <p className='text-primary text-center mt-4'>
+                                <p className='mt-4 text-center text-primary'>
                                     Sudah punya akun? <a href="/login" className='text-absensi-primary'>Masuk disini</a>
                                 </p>
                             </div>
