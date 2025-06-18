@@ -13,6 +13,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
+import { useRouter } from "next/navigation"
 
 export function NavUser({
     user,
@@ -24,6 +25,24 @@ export function NavUser({
     }
 }) {
     const { isMobile } = useSidebar()
+
+    const router = useRouter()
+
+    const handleLogout = async () => {
+        try {
+            const res = await fetch('/api/auth/logout', {
+                method: 'POST',
+            })
+
+            if (res.ok) {
+                router.push('/login')
+            } else {
+                console.error('Logout gagal')
+            }
+        } catch (err) {
+            console.error('Terjadi kesalahan saat logout:', err)
+        }
+    }
 
     return (
         <SidebarMenu>
@@ -86,7 +105,7 @@ export function NavUser({
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout}>
                             <LogOut />
                             Log out
                         </DropdownMenuItem>
