@@ -3,9 +3,6 @@
 import ErrorAlert from '@/components/Alert/ErrorAlert'
 import TextInput from '@/components/Input/TextInput'
 import { Button } from '@/components/ui/button'
-import { auth } from '@/lib/firebaseClient'
-import { setCookie } from 'cookies-next'
-import { signInWithEmailAndPassword } from 'firebase/auth'
 import { Loader2Icon } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -27,12 +24,19 @@ function Login() {
         console.log('Data dikirim:', { email, password });
 
         try {
-            const userCredentials = await signInWithEmailAndPassword(auth, email, password);
-            const token = await userCredentials.user.getIdToken();
-
-            setCookie('token', token, {
-                maxAge: 60 * 60 * 24 * 30
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
             });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.message || 'Login gagal');
+            }
 
             router.push('/dashboard');
         } catch (error: any) {
